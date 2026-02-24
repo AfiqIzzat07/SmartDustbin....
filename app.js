@@ -1,45 +1,27 @@
-const fullnessText = document.getElementById('fullness-text');
-const fill = document.getElementById('fill');
-const statusDiv = document.getElementById('status');
+// app.js
+import { db } from "./firebase-config.js";
+import { ref, onValue, set } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
 
-const openBtn = document.getElementById('open-btn');
-const closeBtn = document.getElementById('close-btn');
+/* ===== DOM ===== */
+const circle = document.getElementById("circle");
+const percentText = document.getElementById("percent");
 
-const servoRef = database.ref('/dustbin/servo');
-const fullnessRef = database.ref('/dustbin/fullness');
+/* ===== FULLNESS LISTENER ===== */
+onValue(ref(db, "dustbin/fullness"), (snapshot) => {
+  const value = snapshot.val();
 
-// Animate circle
-function updateCircle(percent) {
-  fullnessText.innerText = percent + '%';
-  fill.style.transform = rotate(${(percent / 100) * 180}deg);
-}
+  if (value === null) return;
 
-// Update fullness in real-time
-fullnessRef.on('value', snapshot => {
-  const percent = snapshot.val() || 0;
-  updateCircle(percent);
-
-  if (percent >= 80) {
-    statusDiv.innerText = '🚨 FULL';
-  } else if (percent <= 20) {
-    statusDiv.innerText = '✅ CLEANED';
-  } else {
-    statusDiv.innerText = '🟢 OK';
-  }
+  percentText.textContent = value + "%";
+  circle.style.background =
+    value >= 80 ? "#ff3b3b" : value <= 20 ? "#00ff9c" : "#ffaa00";
 });
 
-// Buttons
-openBtn.addEventListener('click', () => {
-  servoRef.set('OPEN');
-});
+/* ===== SERVO BUTTONS ===== */
+window.openBin = () => {
+  set(ref(db, "dustbin/servo"), "OPEN");
+};
 
-closeBtn.addEventListener('click', () => {
-  servoRef.set('CLOSE');
-});
-
-// Offline support
-window.addEventListener('load', () => {
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('service-worker.js');
-  }
-});
+window.closeBin = () => {
+  set(ref(db, "dustbin/servo"), "CLOSE");
+};
