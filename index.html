@@ -10,10 +10,10 @@
 <body>
   <div class="container">
     <h1>🗑 Smart Dustbin</h1>
-
+    
     <div class="circle-container">
       <div class="circle">
-        <div class="mask full" id="full-mask">
+        <div class="mask full">
           <div class="fill" id="fill"></div>
         </div>
         <div class="inside-circle" id="fullness-text">0%</div>
@@ -28,7 +28,11 @@
     <div id="status">🟢 OK</div>
   </div>
 
-  <!-- Firebase modular SDK -->
-  <script type="module" src="app.js"></script>
+  <!-- Firebase Compat SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  
+  <script src="firebase-config.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
